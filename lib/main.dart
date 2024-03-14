@@ -1,13 +1,24 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( const MaterialApp(title: "Contador de pessoas", home: Home()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final int _contadorCasa = 0;
+  final int _contadorTrabalho = 0;
+  final int _contadorEstudo = 0;
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,50 +41,81 @@ class MyApp extends StatelessWidget {
           color: Colors.grey[200],
           child: Column(
             children: [
-              Stack(children: [
-                Opacity(
-                  opacity: 0.5,
-                  child: Image.asset(
-                    'images/bg-house.jpg',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // Add your Text and Buttons here as shown above
-              ]),
-              Stack(children: [
-                Opacity(
-                  opacity: 0.5,
-                  child: Image.asset(
-                    'images/bg-study.jpg',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // Add your Text and Buttons here as shown above
-              ]),
-              Stack(children: [
-                Opacity(
-                  opacity: 0.5,
-                  child: Image.asset(
-                    'images/bg-work.jpg',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                // Add your Text and Buttons here as shown above
-              ]),
+              Tarefa(imagePath: 'images/bg-house.jpg', nicho: 'Casa', contador: _contadorCasa),
+              Tarefa(imagePath: 'images/bg-work.jpg', nicho: 'Trabalho',contador:  _contadorTrabalho),
+              Tarefa(imagePath: 'images/bg-study.jpg', nicho: 'Estudo',contador:  _contadorEstudo),
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {},
+        //   child: const Icon(Icons.add),
+        // ),
       ),
     );
   }
 }
+
+class Tarefa extends StatelessWidget {
+  final String imagePath;
+  final String nicho;
+  final int contador;
+
+  Tarefa({super.key,  
+    required this.imagePath,
+    required this.nicho,
+    required this.contador,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset(
+              imagePath,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Tarefas de $nicho', style: const TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold)),
+                      Text('Total: $contador', style: const TextStyle(fontSize: 22, color: Colors.black)),
+                    ],
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: (){},
+                      child: const Icon(Icons.add, color: Colors.black),
+                    ),
+                    ElevatedButton(
+                      onPressed: (){},
+                      child: const Icon(Icons.remove, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
