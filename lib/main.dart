@@ -1,9 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp( const MaterialApp(title: "Contador de pessoas", home: Home()));
+  runApp(const MaterialApp(title: "Contador de pessoas", home: Home()));
 }
 
 class Home extends StatefulWidget {
@@ -14,10 +12,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final int _contadorCasa = 0;
-  final int _contadorTrabalho = 0;
-  final int _contadorEstudo = 0;
+  int _totalTarefas = 0;
 
+  void ajustarValor(int valor) {
+    setState(() {
+      _totalTarefas += valor;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +42,17 @@ class _HomeState extends State<Home> {
           color: Colors.grey[200],
           child: Column(
             children: [
-              Tarefa(imagePath: 'images/bg-house.jpg', nicho: 'Casa', contador: _contadorCasa),
-              Tarefa(imagePath: 'images/bg-work.jpg', nicho: 'Trabalho',contador:  _contadorTrabalho),
-              Tarefa(imagePath: 'images/bg-study.jpg', nicho: 'Estudo',contador:  _contadorEstudo),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Total de tarefas: $_totalTarefas',
+                    style: const TextStyle(
+                        fontSize: 24,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+              Tarefa(imagePath: 'images/bg-house.jpg', nicho: 'Casa', valorAlterado: ajustarValor),
+              Tarefa(imagePath: 'images/bg-work.jpg', nicho: 'Trabalho', valorAlterado: ajustarValor),
+              Tarefa(imagePath: 'images/bg-study.jpg', nicho: 'Estudo', valorAlterado: ajustarValor),
             ],
           ),
         ),
@@ -56,16 +65,23 @@ class _HomeState extends State<Home> {
   }
 }
 
-class Tarefa extends StatelessWidget {
+class Tarefa extends StatefulWidget {
   final String imagePath;
   final String nicho;
-  final int contador;
+  final Function valorAlterado;
 
-  Tarefa({super.key,  
-    required this.imagePath,
-    required this.nicho,
-    required this.contador,
-  });
+  const Tarefa(
+      {super.key,
+      required this.imagePath,
+      required this.nicho,
+      required this.valorAlterado});
+
+  @override
+  State<Tarefa> createState() => _Tarefa();
+}
+
+class _Tarefa extends State<Tarefa> {
+  int _contador = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +93,7 @@ class Tarefa extends StatelessWidget {
           Opacity(
             opacity: 0.5,
             child: Image.asset(
-              imagePath,
+              widget.imagePath,
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -92,8 +108,14 @@ class Tarefa extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Tarefas de $nicho', style: const TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold)),
-                      Text('Total: $contador', style: const TextStyle(fontSize: 22, color: Colors.black)),
+                      Text('Tarefas de ${widget.nicho}',
+                          style: const TextStyle(
+                              fontSize: 24,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                      Text('Total: $_contador',
+                          style: const TextStyle(
+                              fontSize: 22, color: Colors.black)),
                     ],
                   ),
                 ),
@@ -101,11 +123,23 @@ class Tarefa extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {
+                        setState(() {
+                          _contador++;
+                        });
+                        widget.valorAlterado(1);
+                      },
                       child: const Icon(Icons.add, color: Colors.black),
                     ),
                     ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {
+                        if (_contador > 0) {
+                          setState(() {
+                            _contador--;
+                          });
+                          widget.valorAlterado(-1);
+                        }
+                      },
                       child: const Icon(Icons.remove, color: Colors.black),
                     ),
                   ],
@@ -118,4 +152,3 @@ class Tarefa extends StatelessWidget {
     );
   }
 }
-
