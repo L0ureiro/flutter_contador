@@ -13,11 +13,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _totalTarefas = 0;
+  String _mensagem = 'Ainda lidável';
 
   void ajustarValor(int valor) {
     setState(() {
       _totalTarefas += valor;
     });
+    _totalTarefas > 15 ? _mensagem = 'Ei se oriente por favor' : _mensagem = 'Ainda lidável';
   }
 
   @override
@@ -44,11 +46,12 @@ class _HomeState extends State<Home> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Total de tarefas: $_totalTarefas',
-                    style: const TextStyle(
-                        fontSize: 24,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold)),
+                child: Text(
+                  'Total de tarefas: $_totalTarefas \n $_mensagem',
+                  style: const TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
               Tarefa(imagePath: 'images/bg-house.jpg', nicho: 'Casa', valorAlterado: ajustarValor),
               Tarefa(imagePath: 'images/bg-work.jpg', nicho: 'Trabalho', valorAlterado: ajustarValor),
