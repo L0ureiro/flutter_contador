@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     setState(() {
       _totalTarefas += valor;
     });
-    _totalTarefas > 15 ? _mensagem = 'Ei se oriente por favor' : _mensagem = 'Ainda lidável';
+    _totalTarefas > 15 ? _mensagem = 'Cuidado! Tarefas demais!!' : _mensagem = 'Ainda lidável';
   }
 
   @override
